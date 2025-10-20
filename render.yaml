@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: simplebank
+    runtime: docker
+    plan: free
+    region: ohio
+    branch: main
+    healthCheckPath: /
+    envVars:
+      - key: SPRING_PROFILES_ACTIVE
+        value: prod
+    buildCommand: "./mvnw clean package -DskipTests"
+    startCommand: "java -jar target/*.jar"

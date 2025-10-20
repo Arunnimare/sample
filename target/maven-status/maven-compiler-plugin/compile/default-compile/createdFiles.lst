@@ -1,0 +1,6 @@
+com\simplebank\controller\AccountController.class
+com\simplebank\controller\CustomErrorController.class
+com\simplebank\controller\HomeController.class
+com\simplebank\repository\AccountRepository.class
+com\simplebank\model\Account.class
+com\simplebank\SimpleBankApplication.class
