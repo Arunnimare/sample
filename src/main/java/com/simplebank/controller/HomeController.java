@@ -2,6 +2,7 @@ package com.simplebank.controller;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
 
 @RestController
 public class HomeController {
@@ -12,5 +13,10 @@ public class HomeController {
                "- GET /api/accounts - List all accounts\n" +
                "- POST /api/accounts - Create a new account\n" +
                "- GET /api/accounts/{id} - Get account by ID";
+    }
+
+    @GetMapping("/health")
+    public ResponseEntity<String> healthCheck() {
+        return ResponseEntity.ok("OK");
     }
 }
