@@ -1,12 +1,10 @@
-FROM amazoncorretto:17 AS build
+FROM maven:3.9.5-amazoncorretto-17 AS build
 WORKDIR /app
-COPY mvnw .
-COPY .mvn .mvn
 COPY pom.xml .
 COPY src src
-RUN chmod +x mvnw && ./mvnw package -DskipTests
+RUN mvn clean package -DskipTests
 
-FROM amazoncorretto:17
+FROM amazoncorretto:17-alpine
 WORKDIR /app
 COPY --from=build /app/target/*.jar app.jar
 EXPOSE 8080
