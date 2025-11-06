@@ -33,10 +33,14 @@ public class DatabaseConfig {
             throw new RuntimeException("PostgreSQL JDBC Driver not found", e);
         }
 
+        // Try different environment variable names
         String databaseUrl = System.getenv("DATABASE_URL");
         if (databaseUrl == null || databaseUrl.trim().isEmpty()) {
-            logger.error("DATABASE_URL is not set");
-            throw new RuntimeException("DATABASE_URL environment variable is required");
+            databaseUrl = System.getenv("POSTGRES_URL");
+        }
+        if (databaseUrl == null || databaseUrl.trim().isEmpty()) {
+            logger.error("No database URL environment variable found");
+            throw new RuntimeException("Either DATABASE_URL or POSTGRES_URL environment variable is required");
         }
 
         logger.info("Database URL before processing: {}", databaseUrl);
