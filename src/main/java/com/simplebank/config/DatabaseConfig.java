@@ -13,13 +13,13 @@ import org.slf4j.LoggerFactory;
 public class DatabaseConfig {
     private static final Logger logger = LoggerFactory.getLogger(DatabaseConfig.class);
 
-    @Value("${spring.datasource.url}")
+    @Value("${SPRING_DATASOURCE_URL:${spring.datasource.url:${DATABASE_URL:jdbc:postgresql://localhost:5432/simplebank}}}")
     private String url;
 
-    @Value("${spring.datasource.username}")
+    @Value("${SPRING_DATASOURCE_USERNAME:${spring.datasource.username:postgres}}")
     private String username;
 
-    @Value("${spring.datasource.password}")
+    @Value("${SPRING_DATASOURCE_PASSWORD:${spring.datasource.password:password}}")
     private String password;
 
     @Bean
