@@ -5,10 +5,12 @@ services:
     plan: free
     region: ohio
     branch: main
-    healthCheckPath: /
+    healthCheckPath: /actuator/health
+    buildCommand: docker build -t simplebank .
+    startCommand: docker run -p $PORT:8080 simplebank
     envVars:
       - key: JAVA_TOOL_OPTIONS
-        value: "-Xmx400m -XX:+UseContainerSupport"
+        value: "-Xmx400m -XX:+UseContainerSupport -Dfile.encoding=UTF-8"
       - key: PORT
         value: 8080
       - key: SPRING_PROFILES_ACTIVE
