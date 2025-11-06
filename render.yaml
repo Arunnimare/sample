@@ -7,7 +7,7 @@ services:
     branch: main
     healthCheckPath: /actuator/health
     buildCommand: docker build -t simplebank .
-    startCommand: docker run -p $PORT:8080 simplebank
+    startCommand: docker run -p $PORT:8080 --env-file .env simplebank
     envVars:
       - key: JAVA_TOOL_OPTIONS
         value: "-Xmx400m -XX:+UseContainerSupport -Dfile.encoding=UTF-8"

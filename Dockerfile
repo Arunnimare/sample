@@ -9,9 +9,12 @@ WORKDIR /app
 COPY --from=build /app/target/simple-bank-0.0.1-SNAPSHOT.jar app.jar
 EXPOSE 8080
 ENV SPRING_PROFILES_ACTIVE=prod
-ENTRYPOINT ["java", \
-            "-Djava.security.egd=file:/dev/./urandom", \
-            "-Dspring.profiles.active=prod", \
-            "-Dlogging.level.org.hibernate=DEBUG", \
-            "-Dlogging.level.com.zaxxer.hikari=DEBUG", \
-            "-jar", "app.jar"]
+ENTRYPOINT java \
+    -Djava.security.egd=file:/dev/./urandom \
+    -Dspring.profiles.active=prod \
+    -Dspring.datasource.url="${SPRING_DATASOURCE_URL}" \
+    -Dspring.datasource.username="${SPRING_DATASOURCE_USERNAME}" \
+    -Dspring.datasource.password="${SPRING_DATASOURCE_PASSWORD}" \
+    -Dlogging.level.org.hibernate=DEBUG \
+    -Dlogging.level.com.zaxxer.hikari=DEBUG \
+    -jar app.jar
