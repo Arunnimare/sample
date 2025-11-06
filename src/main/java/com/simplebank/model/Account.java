@@ -12,8 +12,10 @@ import lombok.Data;
 @Data
 public class Account {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
+    
+    private Long userId;
     
     @NotBlank(message = "Account holder name is required")
     private String accountHolderName;

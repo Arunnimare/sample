@@ -1,6 +1,8 @@
 com\simplebank\controller\AccountController.class
-com\simplebank\controller\CustomErrorController.class
+com\simplebank\model\Account.class
+com\simplebank\config\WebMvcConfig.class
+com\simplebank\config\WebConfig.class
 com\simplebank\controller\HomeController.class
 com\simplebank\repository\AccountRepository.class
-com\simplebank\model\Account.class
+com\simplebank\controller\CustomErrorController.class
 com\simplebank\SimpleBankApplication.class

@@ -6,8 +6,31 @@ services:
     region: ohio
     branch: main
     healthCheckPath: /
+    buildCommand: "./mvnw clean package -DskipTests"
+    startCommand: "java -jar target/*.jar"
     envVars:
       - key: SPRING_PROFILES_ACTIVE
         value: prod
-    buildCommand: "./mvnw clean package -DskipTests"
-    startCommand: "java -jar target/*.jar"
+      - key: SERVER_PORT
+        value: 8080
+      - key: JAVA_OPTS
+        value: "-XX:+UseContainerSupport -Xmx512m -Xms256m"
+      - key: SPRING_DATASOURCE_URL
+        fromDatabase:
+          name: simplebank_db
+          property: connectionString
+      - key: SPRING_DATASOURCE_USERNAME
+        fromDatabase:
+          name: simplebank_db
+          property: user
+      - key: SPRING_DATASOURCE_PASSWORD
+        fromDatabase:
+          name: simplebank_db
+          property: password
+    autoDeploy: true
+
+databases:
+  - name: simplebank_db
+    plan: free
+    databaseName: simplebankdb
+    ipAllowList: [] # allow all

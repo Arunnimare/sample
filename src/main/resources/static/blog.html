@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog - SimpleBank</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/modern-effects.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">
+            <a href="/">
+                <i class="fas fa-university"></i>
+                <span>SimpleBank</span>
+            </a>
+        </div>
+        <div class="nav-buttons">
+            <a href="/signup" class="btn secondary">Sign Up</a>
+            <a href="/signin" class="btn primary">Sign In</a>
+        </div>
+    </nav>
+
+    <main class="container">
+        <section class="blog-hero">
+            <div class="hero-content">
+                <h1>SimpleBank Blog</h1>
+                <p class="subtitle">Insights, tips, and news from the world of banking</p>
+            </div>
+        </section>
+
+        <section class="featured-posts">
+            <h2>Featured Articles</h2>
+            <div class="featured-grid">
+                <article class="featured-post">
+                    <img src="https://placehold.co/800x400" alt="Future of Banking">
+                    <div class="post-content">
+                        <div class="post-meta">
+                            <span class="category">Technology</span>
+                            <span class="date">November 5, 2025</span>
+                        </div>
+                        <h3>The Future of Banking: AI and Machine Learning</h3>
+                        <p>Explore how artificial intelligence is transforming the banking industry and improving customer experiences.</p>
+                        <a href="#" class="read-more">Read More</a>
+                    </div>
+                </article>
+                <div class="secondary-featured">
+                    <article class="featured-post-small">
+                        <img src="https://placehold.co/400x200" alt="Investment Tips">
+                        <div class="post-content">
+                            <div class="post-meta">
+                                <span class="category">Investing</span>
+                                <span class="date">November 4, 2025</span>
+                            </div>
+                            <h3>5 Investment Tips for Beginners</h3>
+                            <a href="#" class="read-more">Read More</a>
+                        </div>
+                    </article>
+                    <article class="featured-post-small">
+                        <img src="https://placehold.co/400x200" alt="Cybersecurity">
+                        <div class="post-content">
+                            <div class="post-meta">
+                                <span class="category">Security</span>
+                                <span class="date">November 3, 2025</span>
+                            </div>
+                            <h3>Protecting Your Online Banking Security</h3>
+                            <a href="#" class="read-more">Read More</a>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <section class="blog-categories">
+            <h2>Categories</h2>
+            <div class="categories-grid">
+                <a href="#" class="category-card">
+                    <i class="fas fa-chart-line"></i>
+                    <h3>Investing</h3>
+                    <span class="post-count">15 articles</span>
+                </a>
+                <a href="#" class="category-card">
+                    <i class="fas fa-shield-alt"></i>
+                    <h3>Security</h3>
+                    <span class="post-count">12 articles</span>
+                </a>
+                <a href="#" class="category-card">
+                    <i class="fas fa-laptop"></i>
+                    <h3>Technology</h3>
+                    <span class="post-count">20 articles</span>
+                </a>
+                <a href="#" class="category-card">
+                    <i class="fas fa-piggy-bank"></i>
+                    <h3>Savings</h3>
+                    <span class="post-count">18 articles</span>
+                </a>
+            </div>
+        </section>
+
+        <section class="recent-posts">
+            <h2>Recent Posts</h2>
+            <div class="posts-grid">
+                <article class="post-card">
+                    <img src="https://placehold.co/400x250" alt="Digital Banking">
+                    <div class="post-content">
+                        <div class="post-meta">
+                            <span class="category">Technology</span>
+                            <span class="date">November 2, 2025</span>
+                        </div>
+                        <h3>Digital Banking Trends for 2026</h3>
+                        <p>Discover the upcoming trends that will shape the future of digital banking.</p>
+                        <a href="#" class="read-more">Read More</a>
+                    </div>
+                </article>
+                <article class="post-card">
+                    <img src="https://placehold.co/400x250" alt="Credit Score">
+                    <div class="post-content">
+                        <div class="post-meta">
+                            <span class="category">Personal Finance</span>
+                            <span class="date">November 1, 2025</span>
+                        </div>
+                        <h3>Improving Your Credit Score</h3>
+                        <p>Learn effective strategies to boost your credit score and financial health.</p>
+                        <a href="#" class="read-more">Read More</a>
+                    </div>
+                </article>
+                <article class="post-card">
+                    <img src="https://placehold.co/400x250" alt="Mobile Banking">
+                    <div class="post-content">
+                        <div class="post-meta">
+                            <span class="category">Mobile</span>
+                            <span class="date">October 31, 2025</span>
+                        </div>
+                        <h3>Mobile Banking Security Tips</h3>
+                        <p>Essential security practices for safe mobile banking.</p>
+                        <a href="#" class="read-more">Read More</a>
+                    </div>
+                </article>
+            </div>
+            <div class="load-more">
+                <button class="btn secondary">Load More Posts</button>
+            </div>
+        </section>
+
+        <section class="newsletter">
+            <h2>Subscribe to Our Newsletter</h2>
+            <p>Get the latest banking insights and tips delivered to your inbox</p>
+            <form class="newsletter-form">
+                <input type="email" placeholder="Enter your email address" required>
+                <button type="submit" class="btn primary">Subscribe</button>
+            </form>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <div class="footer-logo">
+                    <i class="fas fa-university"></i>
+                    <span>SimpleBank</span>
+                </div>
+                <p>Your trusted partner in modern banking</p>
+            </div>
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="/about">About Us</a></li>
+                    <li><a href="/support">Support</a></li>
+                    <li><a href="/contact">Contact</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Legal</h3>
+                <ul>
+                    <li><a href="/privacy">Privacy Policy</a></li>
+                    <li><a href="/terms">Terms of Service</a></li>
+                    <li><a href="/security">Security</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 SimpleBank. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>
