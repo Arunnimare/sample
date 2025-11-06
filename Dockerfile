@@ -15,10 +15,8 @@ RUN apk update && \
     chmod +x /docker-entrypoint.sh
 EXPOSE 8080
 ENV SPRING_PROFILES_ACTIVE=prod
-# Use SPRING_DATASOURCE_URL as the main database URL variable
-ENV SPRING_DATASOURCE_URL=jdbc:postgresql://localhost:5432/simplebank
 ENTRYPOINT ["/docker-entrypoint.sh"]
-CMD ["java", \
+CMD ["/wait-for-postgres.sh", "java", \
      "-Djava.security.egd=file:/dev/./urandom", \
      "-XX:MaxRAMPercentage=75.0", \
      "-XX:InitialRAMPercentage=50.0", \
