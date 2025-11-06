@@ -10,7 +10,6 @@ com\simplebank\controller\HomeController.class
 com\simplebank\repository\AccountRepository.class
 com\simplebank\repository\UserRepository.class
 com\simplebank\exception\SimpleBankException.class
-com\simplebank\config\SecurityConfig.class
 com\simplebank\controller\CustomErrorController.class
 com\simplebank\model\User.class
 com\simplebank\SimpleBankApplication.class

@@ -27,6 +27,10 @@ services:
         fromDatabase:
           name: simplebank_db
           property: password
+      - key: DATABASE_HOST
+        fromDatabase:
+          name: simplebank_db
+          property: host
 
 databases:
   - name: simplebank_db

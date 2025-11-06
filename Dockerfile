@@ -21,8 +21,11 @@ ENV POSTGRES_URL=${DATABASE_URL:-jdbc:postgresql://localhost:5432/simplebank}
 ENTRYPOINT ["/docker-entrypoint.sh"]
 CMD ["java", \
      "-Djava.security.egd=file:/dev/./urandom", \
+     "-XX:MaxRAMPercentage=75.0", \
+     "-XX:InitialRAMPercentage=50.0", \
+     "-XX:+HeapDumpOnOutOfMemoryError", \
      "-Dspring.profiles.active=prod", \
-     "-Dlogging.level.org.hibernate=DEBUG", \
-     "-Dlogging.level.com.zaxxer.hikari=DEBUG", \
-     "-Dlogging.level.com.simplebank.config=DEBUG", \
+     "-Dlogging.level.org.hibernate=INFO", \
+     "-Dlogging.level.com.zaxxer.hikari=INFO", \
+     "-Dlogging.level.com.simplebank=INFO", \
      "-jar", "app.jar"]
