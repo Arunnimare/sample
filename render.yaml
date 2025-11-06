@@ -7,7 +7,7 @@ services:
     branch: main
     healthCheckPath: /actuator/health
     buildCommand: docker build -t simplebank .
-    startCommand: docker run -p $PORT:8080 -e SPRING_DATASOURCE_URL="${SPRING_DATASOURCE_URL}" -e SPRING_DATASOURCE_USERNAME="${SPRING_DATASOURCE_USERNAME}" -e SPRING_DATASOURCE_PASSWORD="${SPRING_DATASOURCE_PASSWORD}" simplebank
+    startCommand: docker run -p $PORT:8080 simplebank
     envVars:
       - key: JAVA_TOOL_OPTIONS
         value: "-Xmx400m -XX:+UseContainerSupport -Dfile.encoding=UTF-8"

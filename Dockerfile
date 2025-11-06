@@ -12,4 +12,6 @@ ENV SPRING_PROFILES_ACTIVE=prod
 ENTRYPOINT ["java", \
             "-Djava.security.egd=file:/dev/./urandom", \
             "-Dspring.profiles.active=prod", \
+            "-Dlogging.level.org.hibernate=DEBUG", \
+            "-Dlogging.level.com.zaxxer.hikari=DEBUG", \
             "-jar", "app.jar"]
