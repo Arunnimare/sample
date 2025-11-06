@@ -3,7 +3,8 @@ package com.simplebank.config;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
 import javax.sql.DataSource;
 import java.sql.Connection;
 import org.slf4j.Logger;
@@ -25,19 +26,29 @@ public class DatabaseConfig {
     @Bean
     public DataSource dataSource() {
         try {
-            // Explicitly load the PostgreSQL driver
-            Class.forName("org.postgresql.Driver");
-            logger.info("PostgreSQL JDBC Driver loaded successfully");
-
-            // Create the datasource
-            DriverManagerDataSource dataSource = new DriverManagerDataSource();
-            dataSource.setDriverClassName("org.postgresql.Driver");
-            dataSource.setUrl(url);
-            dataSource.setUsername(username);
-            dataSource.setPassword(password);
-
-            logger.info("Initializing DataSource with URL: {}", url);
-
+            logger.info("Initializing HikariCP DataSource with URL: {}", url);
+            
+            HikariConfig config = new HikariConfig();
+            config.setJdbcUrl(url);
+            config.setUsername(username);
+            config.setPassword(password);
+            config.setDriverClassName("org.postgresql.Driver");
+            
+            // Connection pool settings
+            config.setMaximumPoolSize(3);
+            config.setMinimumIdle(1);
+            config.setConnectionTimeout(20000);
+            config.setIdleTimeout(300000);
+            config.setInitializationFailTimeout(0);
+            
+            // Connection test query
+            config.setConnectionTestQuery("SELECT 1");
+            
+            // Add connection init SQL to verify connection
+            config.setConnectionInitSql("SELECT 1");
+            
+            HikariDataSource dataSource = new HikariDataSource(config);
+            
             // Test the connection
             try {
                 logger.info("Testing database connection...");
@@ -45,14 +56,13 @@ public class DatabaseConfig {
                     logger.info("Successfully connected to the database");
                 }
             } catch (Exception e) {
-                logger.error("Failed to connect to the database", e);
+                logger.error("Failed to connect to the database. URL: {}, Username: {}", url, username);
                 throw new RuntimeException("Failed to connect to the database", e);
             }
-
+            
             return dataSource;
-
         } catch (Exception e) {
-            logger.error("Failed to create datasource", e);
+            logger.error("Failed to create datasource. URL: {}, Username: {}", url, username);
             throw new RuntimeException("Failed to create datasource", e);
         }
     }
