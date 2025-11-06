@@ -13,13 +13,13 @@ import org.slf4j.LoggerFactory;
 public class DatabaseConfig {
     private static final Logger logger = LoggerFactory.getLogger(DatabaseConfig.class);
 
-    @Value("${SPRING_DATASOURCE_URL:}")
+    @Value("${spring.datasource.url}")
     private String url;
 
-    @Value("${SPRING_DATASOURCE_USERNAME:}")
+    @Value("${spring.datasource.username}")
     private String username;
 
-    @Value("${SPRING_DATASOURCE_PASSWORD:}")
+    @Value("${spring.datasource.password}")
     private String password;
 
     @Bean
@@ -28,52 +28,29 @@ public class DatabaseConfig {
             // Explicitly load the PostgreSQL driver
             Class.forName("org.postgresql.Driver");
             logger.info("PostgreSQL JDBC Driver loaded successfully");
-        } catch (ClassNotFoundException e) {
-            logger.error("PostgreSQL JDBC Driver not found", e);
-            throw new RuntimeException("PostgreSQL JDBC Driver not found", e);
-        }
 
-        // Try different environment variable names
-        String databaseUrl = System.getenv("DATABASE_URL");
-        if (databaseUrl == null || databaseUrl.trim().isEmpty()) {
-            databaseUrl = System.getenv("POSTGRES_URL");
-        }
-        if (databaseUrl == null || databaseUrl.trim().isEmpty()) {
-            logger.error("No database URL environment variable found");
-            throw new RuntimeException("Either DATABASE_URL or POSTGRES_URL environment variable is required");
-        }
-
-        logger.info("Database URL before processing: {}", databaseUrl);
-
-        try {
-            if (databaseUrl.startsWith("postgres://")) {
-                // Convert Render postgres:// URL to jdbc:postgresql:// URL
-                databaseUrl = databaseUrl.replace("postgres://", "");
-                String[] parts = databaseUrl.split("@");
-                if (parts.length == 2) {
-                    String[] credentials = parts[0].split(":");
-                    if (credentials.length == 2) {
-                        username = credentials[0];
-                        password = credentials[1];
-                    }
-                    databaseUrl = "jdbc:postgresql://" + parts[1];
-                }
-            }
-
-            logger.info("Initializing DataSource with processed URL: {}", databaseUrl);
-
+            // Create the datasource
             DriverManagerDataSource dataSource = new DriverManagerDataSource();
             dataSource.setDriverClassName("org.postgresql.Driver");
-            dataSource.setUrl(databaseUrl);
+            dataSource.setUrl(url);
             dataSource.setUsername(username);
             dataSource.setPassword(password);
 
+            logger.info("Initializing DataSource with URL: {}", url);
+
             // Test the connection
-            try (Connection conn = dataSource.getConnection()) {
-                logger.info("Successfully established test connection to the database");
+            try {
+                logger.info("Testing database connection...");
+                try (Connection conn = dataSource.getConnection()) {
+                    logger.info("Successfully connected to the database");
+                }
+            } catch (Exception e) {
+                logger.error("Failed to connect to the database", e);
+                throw new RuntimeException("Failed to connect to the database", e);
             }
 
             return dataSource;
+
         } catch (Exception e) {
             logger.error("Failed to create datasource", e);
             throw new RuntimeException("Failed to create datasource", e);
