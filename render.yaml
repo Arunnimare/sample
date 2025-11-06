@@ -5,14 +5,11 @@ services:
     plan: free
     region: ohio
     branch: main
+    rootDir: .
     healthCheckPath: /
-    buildCommand: "./mvnw clean package -DskipTests"
-    startCommand: "java -jar target/*.jar"
     envVars:
       - key: SPRING_PROFILES_ACTIVE
         value: prod
-      - key: SERVER_PORT
-        value: 8080
       - key: JAVA_OPTS
         value: "-XX:+UseContainerSupport -Xmx512m -Xms256m"
       - key: SPRING_DATASOURCE_URL
@@ -32,5 +29,4 @@ services:
 databases:
   - name: simplebank_db
     plan: free
-    databaseName: simplebankdb
-    ipAllowList: [] # allow all
+    ipAllowList: []

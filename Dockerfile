@@ -1,11 +1,11 @@
 FROM maven:3.9.5-amazoncorretto-17 AS build
 WORKDIR /app
-COPY pom.xml .
-COPY src src
+COPY . .
 RUN mvn clean package -DskipTests
 
 FROM amazoncorretto:17-alpine
 WORKDIR /app
 COPY --from=build /app/target/*.jar app.jar
+ENV SPRING_PROFILES_ACTIVE=prod
 EXPOSE 8080
-ENTRYPOINT ["java","-jar","app.jar"]
+ENTRYPOINT ["java", "-Dserver.port=$PORT", "-jar", "app.jar"]
