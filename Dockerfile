@@ -15,9 +15,8 @@ RUN apk update && \
     chmod +x /docker-entrypoint.sh
 EXPOSE 8080
 ENV SPRING_PROFILES_ACTIVE=prod
-# Set default value for DATABASE_URL if not provided
-ENV DATABASE_URL=jdbc:postgresql://localhost:5432/simplebank
-ENV POSTGRES_URL=${DATABASE_URL:-jdbc:postgresql://localhost:5432/simplebank}
+# Use SPRING_DATASOURCE_URL as the main database URL variable
+ENV SPRING_DATASOURCE_URL=jdbc:postgresql://localhost:5432/simplebank
 ENTRYPOINT ["/docker-entrypoint.sh"]
 CMD ["java", \
      "-Djava.security.egd=file:/dev/./urandom", \
