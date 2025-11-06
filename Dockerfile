@@ -7,15 +7,14 @@ RUN ./mvnw clean package -DskipTests
 FROM eclipse-temurin:17-jre-alpine
 WORKDIR /app
 COPY --from=build /app/target/simple-bank-0.0.1-SNAPSHOT.jar app.jar
-RUN apk add --no-cache postgresql-client
+COPY wait-for-postgres.sh /wait-for-postgres.sh
+RUN apk add --no-cache postgresql-client && chmod +x /wait-for-postgres.sh
 EXPOSE 8080
 ENV SPRING_PROFILES_ACTIVE=prod
 ENTRYPOINT java \
     -Djava.security.egd=file:/dev/./urandom \
     -Dspring.profiles.active=prod \
-    -Dspring.datasource.url="${SPRING_DATASOURCE_URL}" \
-    -Dspring.datasource.username="${SPRING_DATASOURCE_USERNAME}" \
-    -Dspring.datasource.password="${SPRING_DATASOURCE_PASSWORD}" \
     -Dlogging.level.org.hibernate=DEBUG \
     -Dlogging.level.com.zaxxer.hikari=DEBUG \
+    -Dlogging.level.com.simplebank.config=DEBUG \
     -jar app.jar

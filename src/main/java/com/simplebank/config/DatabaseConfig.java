@@ -23,16 +23,32 @@ public class DatabaseConfig {
 
     @Bean
     public DataSource dataSource() {
-        logger.info("Initializing DataSource with URL: {}", url);
+        String databaseUrl = System.getenv("DATABASE_URL");
+        if (databaseUrl == null) {
+            databaseUrl = url;
+        }
+        
+        logger.info("Database URL before processing: {}", databaseUrl);
+        
+        if (databaseUrl != null && databaseUrl.startsWith("postgres://")) {
+            // Convert Render postgres:// URL to jdbc:postgresql:// URL
+            databaseUrl = databaseUrl.replace("postgres://", "");
+            String[] parts = databaseUrl.split("@");
+            if (parts.length == 2) {
+                String[] credentials = parts[0].split(":");
+                if (credentials.length == 2) {
+                    username = credentials[0];
+                    password = credentials[1];
+                }
+                databaseUrl = "jdbc:postgresql://" + parts[1];
+            }
+        }
+        
+        logger.info("Initializing DataSource with processed URL: {}", databaseUrl);
         
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setDriverClassName("org.postgresql.Driver");
-        
-        if (!url.startsWith("jdbc:postgresql://")) {
-            url = "jdbc:postgresql://" + url;
-        }
-        
-        dataSource.setUrl(url);
+        dataSource.setUrl(databaseUrl);
         dataSource.setUsername(username);
         dataSource.setPassword(password);
         
