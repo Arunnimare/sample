@@ -5,13 +5,14 @@ services:
     plan: free
     region: ohio
     branch: main
-    rootDir: .
     healthCheckPath: /
     envVars:
+      - key: JAVA_TOOL_OPTIONS
+        value: "-Xmx400m -XX:+UseContainerSupport"
+      - key: PORT
+        value: 8080
       - key: SPRING_PROFILES_ACTIVE
         value: prod
-      - key: JAVA_OPTS
-        value: "-XX:+UseContainerSupport -Xmx512m -Xms256m"
       - key: SPRING_DATASOURCE_URL
         fromDatabase:
           name: simplebank_db
@@ -24,7 +25,6 @@ services:
         fromDatabase:
           name: simplebank_db
           property: password
-    autoDeploy: true
 
 databases:
   - name: simplebank_db

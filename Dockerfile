@@ -1,11 +1,9 @@
-FROM maven:3.9.5-amazoncorretto-17 AS build
+FROM eclipse-temurin:17-jdk-alpine
 WORKDIR /app
-COPY . .
-RUN mvn clean package -DskipTests
-
-FROM amazoncorretto:17-alpine
-WORKDIR /app
-COPY --from=build /app/target/*.jar app.jar
-ENV SPRING_PROFILES_ACTIVE=prod
+COPY mvnw .
+COPY .mvn .mvn
+COPY pom.xml .
+COPY src src
+RUN ./mvnw package -DskipTests
 EXPOSE 8080
-ENTRYPOINT ["java", "-Dserver.port=$PORT", "-jar", "app.jar"]
+CMD ["java", "-Dspring.profiles.active=prod", "-jar", "target/*.jar"]
