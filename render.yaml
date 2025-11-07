@@ -7,10 +7,12 @@ services:
     branch: main
     healthCheckPath: /actuator/health
     buildCommand: ./mvnw clean package -DskipTests
-    startCommand: java -jar target/*.jar
+    startCommand: java -Dserver.port=$PORT -Dspring.profiles.active=prod -jar target/*.jar
     envVars:
       - key: JAVA_TOOL_OPTIONS
         value: "-Xmx400m -XX:+UseContainerSupport -Dfile.encoding=UTF-8"
+      - key: PORT
+        value: "10000"
       - key: SPRING_PROFILES_ACTIVE
         value: prod
       - key: SPRING_DATASOURCE_URL

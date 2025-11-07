@@ -230,34 +230,199 @@ CREATE TABLE accounts (
 
 ## Build and Deployment
 
+## Local Development
+
 ### Prerequisites
 - Java 17 or higher
 - Maven 3.6+
-- MySQL/PostgreSQL database
+- PostgreSQL database
 
 ### Build Commands
 ```bash
 # Clean and build
-mvn clean install
+./mvnw clean install
 
 # Run application
-mvn spring-boot:run
+./mvnw spring-boot:run
 
 # Run tests
-mvn test
+./mvnw test
 ```
 
-### Application Properties
+## Environment Variables and Configuration
+
+### Development Properties (application.properties)
 ```properties
 # Server configuration
 server.port=8080
+server.error.whitelabel.enabled=false
 
 # Database configuration
-spring.datasource.url=jdbc:mysql://localhost:3306/simplebank
-spring.datasource.username=root
+spring.datasource.url=jdbc:postgresql://localhost:5432/simplebank
+spring.datasource.username=postgres
 spring.datasource.password=password
 
 # JPA/Hibernate
-spring.jpa.hibernate.ddl-auto=update
+spring.jpa.hibernate.ddl-auto=validate
 spring.jpa.show-sql=true
 ```
+
+### Production Properties (application-prod.properties)
+```properties
+# Server Configuration
+server.port=${PORT:8080}
+server.address=0.0.0.0
+
+# Database Connection
+spring.datasource.driver-class-name=org.postgresql.Driver
+spring.datasource.url=${SPRING_DATASOURCE_URL}
+spring.datasource.username=${SPRING_DATASOURCE_USERNAME}
+spring.datasource.password=${SPRING_DATASOURCE_PASSWORD}
+
+# Connection Pool Settings
+spring.datasource.tomcat.max-active=3
+spring.datasource.tomcat.max-idle=1
+spring.datasource.tomcat.test-on-borrow=true
+spring.datasource.tomcat.validation-query=SELECT 1
+
+# JPA/Hibernate
+spring.jpa.hibernate.ddl-auto=validate
+spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
+spring.jpa.show-sql=false
+
+# Cache Configuration
+spring.cache.type=caffeine
+spring.cache.caffeine.spec=maximumSize=500,expireAfterAccess=600s
+
+# Actuator Configuration
+management.endpoints.web.exposure.include=health,info,metrics
+management.endpoint.health.show-details=never
+management.endpoint.health.probes.enabled=true
+management.health.livenessstate.enabled=true
+management.health.readinessstate.enabled=true
+```
+
+## Database Configuration (DatabaseConfig.java)
+
+The database configuration is handled by the `DatabaseConfig` class, which creates and manages the database connection:
+
+```java
+@Configuration
+public class DatabaseConfig {
+    @Value("${spring.datasource.url}")
+    private String url;
+
+    @Value("${spring.datasource.username}")
+    private String username;
+
+    @Value("${spring.datasource.password}")
+    private String password;
+
+    @Bean
+    public DataSource dataSource() {
+        DriverManagerDataSource dataSource = new DriverManagerDataSource();
+        dataSource.setDriverClassName("org.postgresql.Driver");
+        dataSource.setUrl(url);
+        dataSource.setUsername(username);
+        dataSource.setPassword(password);
+        return dataSource;
+    }
+}
+```
+
+## Deployment on Render
+
+### render.yaml Configuration
+```yaml
+services:
+  - type: web
+    name: simplebank
+    buildCommand: ./mvnw clean package -DskipTests
+    startCommand: java -jar target/*.jar
+    envVars:
+      - key: JAVA_TOOL_OPTIONS
+        value: "-Xmx400m -XX:+UseContainerSupport -Dfile.encoding=UTF-8"
+      - key: SPRING_PROFILES_ACTIVE
+        value: prod
+      - key: SPRING_DATASOURCE_URL
+        fromDatabase:
+          name: simplebank_db
+          property: connectionString
+      - key: SPRING_DATASOURCE_USERNAME
+        fromDatabase:
+          name: simplebank_db
+          property: username
+      - key: SPRING_DATASOURCE_PASSWORD
+        fromDatabase:
+          name: simplebank_db
+          property: password
+
+databases:
+  - name: simplebank_db
+    plan: free
+    ipAllowList: []
+```
+
+### Environment Variables
+1. Application Settings
+   - `PORT`: Application port (set by Render)
+   - `SPRING_PROFILES_ACTIVE`: Active profile (prod)
+   - `JAVA_TOOL_OPTIONS`: JVM configuration
+
+2. Database Settings
+   - `SPRING_DATASOURCE_URL`: Database connection URL
+   - `SPRING_DATASOURCE_USERNAME`: Database username
+   - `SPRING_DATASOURCE_PASSWORD`: Database password
+   - `DATABASE_HOST`: Database host (extracted from URL)
+
+## Application Startup and Health Monitoring
+
+### Startup Logging
+The application includes detailed startup logging through the StartupLogger component:
+
+```java
+@Component
+class StartupLogger {
+    @EventListener
+    public void onApplicationStarted(ApplicationStartedEvent event) {
+        logger.info("Application started on {}:{}", address, port);
+        logger.info("Environment variables:");
+        logger.info("PORT={}", System.getenv("PORT"));
+        logger.info("SPRING_PROFILES_ACTIVE={}", System.getenv("SPRING_PROFILES_ACTIVE"));
+    }
+}
+```
+
+### Health Checks
+1. Database Connection: Validates database connectivity
+2. Application Status: Monitors application health
+3. Memory Usage: Tracks JVM memory utilization
+
+## Performance Optimization
+
+### Connection Pool Settings
+- Maximum Active Connections: 3
+- Minimum Idle Connections: 1
+- Connection Test: Enabled
+- Validation Query: SELECT 1
+
+### Memory Settings
+- Maximum Heap: 400MB
+- Initial Heap: Based on container
+- GC Configuration: Container-aware
+
+## Monitoring and Troubleshooting
+
+### Logging Configuration
+```properties
+logging.level.root=INFO
+logging.level.org.springframework.web=INFO
+logging.level.org.hibernate=INFO
+logging.level.com.simplebank=INFO
+logging.pattern.console=%d{yyyy-MM-dd HH:mm:ss} - %logger{36} - %msg%n
+```
+
+### Health Endpoints
+- `/actuator/health`: Overall health status
+- `/actuator/info`: Application information
+- `/actuator/metrics`: Performance metrics
