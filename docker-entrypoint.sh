@@ -1,6 +1,10 @@
 #!/bin/sh
 echo "Checking environment variables..."
 
+# Ensure PORT is set and exported
+export PORT="${PORT:-8080}"
+echo "Using PORT: ${PORT}"
+
 # Extract host from SPRING_DATASOURCE_URL if DATABASE_HOST is not set
 if [ -z "$DATABASE_HOST" ] && [ ! -z "$SPRING_DATASOURCE_URL" ]; then
     export DATABASE_HOST=$(echo $SPRING_DATASOURCE_URL | sed -n 's/.*:\/\/\([^:]*\).*/\1/p')

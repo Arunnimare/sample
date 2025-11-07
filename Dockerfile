@@ -13,7 +13,8 @@ RUN apk update && \
     apk add --no-cache postgresql15-client && \
     chmod +x /wait-for-postgres.sh && \
     chmod +x /docker-entrypoint.sh
-EXPOSE 8080
+ENV PORT=8080
+EXPOSE ${PORT}
 ENV SPRING_PROFILES_ACTIVE=prod
 ENTRYPOINT ["/docker-entrypoint.sh"]
 CMD ["/wait-for-postgres.sh", "java", \
