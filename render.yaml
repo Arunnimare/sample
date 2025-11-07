@@ -6,13 +6,11 @@ services:
     region: ohio
     branch: main
     healthCheckPath: /actuator/health
-    buildCommand: docker build -t simplebank .
-    startCommand: docker run --init -e PORT=$PORT -p $PORT:$PORT simplebank
+    buildCommand: ./mvnw clean package -DskipTests
+    startCommand: java -jar target/*.jar
     envVars:
       - key: JAVA_TOOL_OPTIONS
-        value: "-Xmx400m -XX:+UseContainerSupport -Dfile.encoding=UTF-8 -Dserver.port=$PORT"
-      - key: PORT
-        value: "10000"
+        value: "-Xmx400m -XX:+UseContainerSupport -Dfile.encoding=UTF-8"
       - key: SPRING_PROFILES_ACTIVE
         value: prod
       - key: SPRING_DATASOURCE_URL
