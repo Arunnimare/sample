@@ -7,12 +7,12 @@ services:
     branch: main
     healthCheckPath: /actuator/health
     buildCommand: docker build -t simplebank .
-    startCommand: docker run -e PORT=$PORT -p $PORT:$PORT simplebank
+    startCommand: docker run --init -e PORT=$PORT -p $PORT:$PORT simplebank
     envVars:
       - key: JAVA_TOOL_OPTIONS
-        value: "-Xmx400m -XX:+UseContainerSupport -Dfile.encoding=UTF-8"
+        value: "-Xmx400m -XX:+UseContainerSupport -Dfile.encoding=UTF-8 -Dserver.port=$PORT"
       - key: PORT
-        sync: false
+        value: "10000"
       - key: SPRING_PROFILES_ACTIVE
         value: prod
       - key: SPRING_DATASOURCE_URL

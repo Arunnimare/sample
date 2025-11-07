@@ -2,8 +2,16 @@
 echo "Checking environment variables..."
 
 # Ensure PORT is set and exported
-export PORT="${PORT:-8080}"
+export PORT="${PORT:-10000}"
 echo "Using PORT: ${PORT}"
+
+# Verify port is available
+nc -z localhost ${PORT} 2>/dev/null
+if [ $? -eq 0 ]; then
+    echo "Warning: Port ${PORT} is already in use"
+else
+    echo "Port ${PORT} is available"
+fi
 
 # Extract host from SPRING_DATASOURCE_URL if DATABASE_HOST is not set
 if [ -z "$DATABASE_HOST" ] && [ ! -z "$SPRING_DATASOURCE_URL" ]; then

@@ -10,14 +10,14 @@ COPY --from=build /app/target/simple-bank-0.0.1-SNAPSHOT.jar app.jar
 COPY wait-for-postgres.sh /wait-for-postgres.sh
 COPY docker-entrypoint.sh /docker-entrypoint.sh
 RUN apk update && \
-    apk add --no-cache postgresql15-client && \
+    apk add --no-cache postgresql15-client netcat-openbsd && \
     chmod +x /wait-for-postgres.sh && \
     chmod +x /docker-entrypoint.sh
-ENV PORT=8080
+ENV PORT=10000
 EXPOSE ${PORT}
 ENV SPRING_PROFILES_ACTIVE=prod
 ENTRYPOINT ["/docker-entrypoint.sh"]
-CMD ["/wait-for-postgres.sh", "java", \
+CMD ["/wait-for-postgres.sh", "java", "-Dserver.port=${PORT}", \
      "-Djava.security.egd=file:/dev/./urandom", \
      "-XX:MaxRAMPercentage=75.0", \
      "-XX:InitialRAMPercentage=50.0", \
