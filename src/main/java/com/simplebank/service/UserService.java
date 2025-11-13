@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 import com.simplebank.model.User;
 import com.simplebank.repository.UserRepository;
 import java.util.ArrayList;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 public class UserService implements UserDetailsService {
@@ -18,6 +20,9 @@ public class UserService implements UserDetailsService {
     
     @Autowired
     private PasswordEncoder passwordEncoder;
+    
+    // Simple in-memory token storage (In production, use Redis or database)
+    private final Map<String, String> tokenStore = new ConcurrentHashMap<>();
     
     public User registerUser(User user) {
         if (userRepository.existsByUsername(user.getUsername())) {
@@ -35,6 +40,32 @@ public class UserService implements UserDetailsService {
     public User findByUsername(String username) {
         return userRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("User not found"));
+    }
+
+    // Validate a raw password against an encoded password
+    public boolean validatePassword(String rawPassword, String encodedPassword) {
+        if (rawPassword == null || encodedPassword == null) {
+            return false;
+        }
+        return passwordEncoder.matches(rawPassword, encodedPassword);
+    }
+
+    // Generate a simple token for the user. For now this is a UUID string.
+    // In a real application replace this with a JWT or another secure token mechanism.
+    public String generateToken(User user) {
+        String token = java.util.UUID.randomUUID().toString();
+        tokenStore.put(token, user.getUsername());
+        return token;
+    }
+    
+    // Get username from token
+    public String getUsernameFromToken(String token) {
+        return tokenStore.get(token);
+    }
+    
+    // Invalidate token
+    public void invalidateToken(String token) {
+        tokenStore.remove(token);
     }
     
     @Override

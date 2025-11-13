@@ -32,4 +32,9 @@ public class User {
 
     @NotBlank(message = "Full name is required")
     private String fullName;
+
+    // Return granted authorities for the user. Currently empty; adjust when roles are added.
+    public java.util.Collection<org.springframework.security.core.GrantedAuthority> getAuthorities() {
+        return new java.util.ArrayList<>();
+    }
 }

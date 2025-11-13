@@ -24,10 +24,10 @@ public class DatabaseConfig {
 
     @Bean
     public DataSource dataSource() {
-        logger.info("Initializing DataSource with URL: {}", url);
+        logger.info("Initializing H2 DataSource with URL: {}", url);
         
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
-        dataSource.setDriverClassName("org.postgresql.Driver");
+        dataSource.setDriverClassName("org.h2.Driver");
         dataSource.setUrl(url);
         dataSource.setUsername(username);
         dataSource.setPassword(password);

@@ -31,6 +31,8 @@ services:
         fromDatabase:
           name: simplebank_db
           property: host
+      - key: ALLOWED_ORIGIN
+        value: "https://${RENDER_EXTERNAL_HOSTNAME}"
 
 databases:
   - name: simplebank_db

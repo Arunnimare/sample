@@ -59,6 +59,7 @@ public class AccountController {
                 .orElseGet(() -> {
                     Account newAccount = new Account();
                     newAccount.setUserId(user.getId());
+                    newAccount.setAccountHolderName(user.getFullName() != null ? user.getFullName() : user.getUsername());
                     newAccount.setBalance(0.0);
                     return accountRepository.save(newAccount);
                 });

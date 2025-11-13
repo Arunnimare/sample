@@ -31,9 +31,12 @@ public class WebServerConfiguration implements WebServerFactoryCustomizer<Tomcat
         
         // Set additional server properties
         factory.addProtocolHandlerCustomizers(protocolHandler -> {
-            protocolHandler.setMaxThreads(20);
-            protocolHandler.setMinSpareThreads(5);
-            logger.info("Protocol handler configured with maxThreads: 20, minSpareThreads: 5");
+            if (protocolHandler instanceof org.apache.coyote.http11.Http11NioProtocol) {
+                org.apache.coyote.http11.Http11NioProtocol protocol = (org.apache.coyote.http11.Http11NioProtocol) protocolHandler;
+                protocol.setMaxThreads(20);
+                protocol.setMinSpareThreads(5);
+                logger.info("Protocol handler configured with maxThreads: 20, minSpareThreads: 5");
+            }
         });
     }
 }
