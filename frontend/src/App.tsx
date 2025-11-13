@@ -6,6 +6,7 @@ import { NotificationProvider } from './context/NotificationContext';
 import { Dashboard } from './components/dashboard/Dashboard';
 import { Login } from './components/auth/Login';
 import { Signup } from './components/auth/Signup';
+import Home from './components/home/Home';
 
 // Create a client
 const queryClient = new QueryClient();
@@ -30,11 +31,11 @@ function App() {
         <NotificationProvider>
           <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
             <Routes>
+              <Route path="/" element={<Home />} />
               <Route path="/login" element={<Login />} />
               <Route path="/signup" element={<Signup />} />
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/accounts" element={<div>Accounts Page (Coming Soon)</div>} />
-              <Route path="/" element={<Navigate to="/login" replace />} />
             </Routes>
           </Router>
         </NotificationProvider>
