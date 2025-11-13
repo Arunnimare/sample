@@ -50,10 +50,34 @@ public class AuthController {
     @PostMapping("/signup")
     public ResponseEntity<?> registerUser(@RequestBody User user) {
         try {
+            // Validate required fields
+            if (user.getUsername() == null || user.getUsername().trim().isEmpty()) {
+                return ResponseEntity.badRequest().body(Map.of("message", "Username is required"));
+            }
+            if (user.getPassword() == null || user.getPassword().trim().isEmpty()) {
+                return ResponseEntity.badRequest().body(Map.of("message", "Password is required"));
+            }
+            if (user.getEmail() == null || user.getEmail().trim().isEmpty()) {
+                return ResponseEntity.badRequest().body(Map.of("message", "Email is required"));
+            }
+            if (user.getFullName() == null || user.getFullName().trim().isEmpty()) {
+                return ResponseEntity.badRequest().body(Map.of("message", "Full name is required"));
+            }
+            
             User registeredUser = userService.registerUser(user);
-            return ResponseEntity.ok(registeredUser);
+            
+            Map<String, Object> response = new HashMap<>();
+            response.put("message", "User registered successfully");
+            response.put("user", Map.of(
+                "id", registeredUser.getId(),
+                "username", registeredUser.getUsername(),
+                "email", registeredUser.getEmail(),
+                "fullName", registeredUser.getFullName()
+            ));
+            
+            return ResponseEntity.ok(response);
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Error: " + e.getMessage());
+            return ResponseEntity.badRequest().body(Map.of("message", e.getMessage()));
         }
     }
     

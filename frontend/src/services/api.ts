@@ -59,7 +59,7 @@ export const authApi = {
     }
     return response;
   },
-  signup: (userData: { username: string; password: string; email: string }) =>
+  signup: (userData: { username: string; password: string; email: string; fullName: string }) =>
     api.post('/auth/signup', userData),
   logout: () => api.post('/auth/logout'),
 };
