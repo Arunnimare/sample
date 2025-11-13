@@ -28,4 +28,10 @@ public class HomeController {
     public ResponseEntity<String> healthCheck() {
         return ResponseEntity.ok("OK");
     }
+    
+    // Catch-all route for React SPA - forward all non-API routes to index.html
+    @GetMapping(value = {"/login", "/signup", "/accounts/**", "/dashboard/**"})
+    public String reactApp() {
+        return "forward:/index.html";
+    }
 }

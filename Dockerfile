@@ -1,12 +1,26 @@
-FROM eclipse-temurin:17-jdk-alpine AS build
+# Stage 1: Build frontend
+FROM node:18-alpine AS frontend-build
+WORKDIR /frontend
+COPY frontend/package*.json ./
+RUN npm ci --only=production
+COPY frontend/ ./
+RUN npm run build
+
+# Stage 2: Build backend
+FROM eclipse-temurin:17-jdk-alpine AS backend-build
 WORKDIR /app
 COPY . .
 RUN chmod +x mvnw
+
+# Copy frontend build to Spring Boot static resources
+COPY --from=frontend-build /frontend/build /app/src/main/resources/static
+
 RUN ./mvnw clean package -DskipTests
 
+# Stage 3: Runtime
 FROM eclipse-temurin:17-jre-alpine
 WORKDIR /app
-COPY --from=build /app/target/simple-bank-0.0.1-SNAPSHOT.jar app.jar
+COPY --from=backend-build /app/target/simple-bank-0.0.1-SNAPSHOT.jar app.jar
 COPY docker-entrypoint.sh /docker-entrypoint.sh
 RUN apk update && \
     apk add --no-cache curl && \
