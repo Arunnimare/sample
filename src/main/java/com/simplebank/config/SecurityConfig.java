@@ -83,6 +83,8 @@ public class SecurityConfig {
                 .requestMatchers("/api/test/**").permitAll()  // Allow test endpoints
                 .requestMatchers("/api/debug/**").permitAll() // Allow debug endpoints
                 .requestMatchers("/h2-console/**").permitAll() // Allow H2 console
+                .requestMatchers("/actuator/**").permitAll() // Allow actuator endpoints
+                .requestMatchers("/health").permitAll() // Allow simple health check
                 .requestMatchers("/api/**").authenticated()
                 .requestMatchers("/dashboard/**").authenticated()
                 .anyRequest().permitAll()

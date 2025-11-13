@@ -1,27 +1,15 @@
 #!/bin/sh
-echo "Checking environment variables..."
+set -e
 
-# Ensure PORT is set and exported
-export PORT="${PORT:-10000}"
-echo "Using PORT: ${PORT}"
+echo "=== Starting Simple Bank Application ==="
+echo "Environment: ${SPRING_PROFILES_ACTIVE:-development}"
+echo "Port: ${PORT:-10000}"
 
-# Verify port is available
-nc -z localhost ${PORT} 2>/dev/null
-if [ $? -eq 0 ]; then
-    echo "Warning: Port ${PORT} is already in use"
-else
-    echo "Port ${PORT} is available"
-fi
-
-# Extract host from SPRING_DATASOURCE_URL if DATABASE_HOST is not set
-if [ -z "$DATABASE_HOST" ] && [ ! -z "$SPRING_DATASOURCE_URL" ]; then
-    export DATABASE_HOST=$(echo $SPRING_DATASOURCE_URL | sed -n 's/.*:\/\/\([^:]*\).*/\1/p')
-fi
-
-echo "Database connection details:"
-echo "SPRING_DATASOURCE_URL=${SPRING_DATASOURCE_URL}"
-echo "DATABASE_HOST=${DATABASE_HOST}"
-echo "SPRING_DATASOURCE_USERNAME=${SPRING_DATASOURCE_USERNAME}"
-
-echo "Starting application..."
-exec "$@"
+# Start the application
+exec java \
+  -Dserver.port="${PORT:-10000}" \
+  -Djava.security.egd=file:/dev/./urandom \
+  -XX:MaxRAMPercentage=75.0 \
+  -XX:InitialRAMPercentage=50.0 \
+  -Dspring.profiles.active="${SPRING_PROFILES_ACTIVE:-prod}" \
+  -jar /app/app.jar

@@ -7,23 +7,15 @@ RUN ./mvnw clean package -DskipTests
 FROM eclipse-temurin:17-jre-alpine
 WORKDIR /app
 COPY --from=build /app/target/simple-bank-0.0.1-SNAPSHOT.jar app.jar
-COPY wait-for-postgres.sh /wait-for-postgres.sh
 COPY docker-entrypoint.sh /docker-entrypoint.sh
 RUN apk update && \
-    apk add --no-cache postgresql15-client netcat-openbsd && \
-    chmod +x /wait-for-postgres.sh && \
-    chmod +x /docker-entrypoint.sh
+    apk add --no-cache curl && \
+    chmod +x /docker-entrypoint.sh && \
+    addgroup -g 1000 appuser && \
+    adduser -u 1000 -G appuser -s /bin/sh -D appuser && \
+    chown -R appuser:appuser /app
+USER appuser
 ENV PORT=10000
-EXPOSE ${PORT}
+EXPOSE 10000
 ENV SPRING_PROFILES_ACTIVE=prod
 ENTRYPOINT ["/docker-entrypoint.sh"]
-CMD ["/wait-for-postgres.sh", "java", "-Dserver.port=${PORT}", \
-     "-Djava.security.egd=file:/dev/./urandom", \
-     "-XX:MaxRAMPercentage=75.0", \
-     "-XX:InitialRAMPercentage=50.0", \
-     "-XX:+HeapDumpOnOutOfMemoryError", \
-     "-Dspring.profiles.active=prod", \
-     "-Dlogging.level.org.hibernate=INFO", \
-     "-Dlogging.level.com.zaxxer.hikari=INFO", \
-     "-Dlogging.level.com.simplebank=INFO", \
-     "-jar", "app.jar"]
