@@ -43,10 +43,10 @@ export const useAuth = () => {
     }
   }, [navigate, showNotification, setIsLoading]);
 
-  const signup = useCallback(async (username: string, password: string, email: string) => {
+  const signup = useCallback(async (username: string, password: string, email: string, fullName: string) => {
     setIsLoading(true);
     try {
-      const response = await authApi.signup({ username, password, email });
+      const response = await authApi.signup({ username, password, email, fullName });
       const { token, user } = response.data;
       
       localStorage.setItem('token', token);
