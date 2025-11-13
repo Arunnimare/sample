@@ -27,17 +27,16 @@ public class SecurityConfig {
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .headers(headers -> headers
                 .contentSecurityPolicy(config -> config
-                    .policyDirectives("default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline';"))
+                    .policyDirectives("default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; connect-src 'self'; img-src 'self' data:;"))
                 .frameOptions(frame -> frame.sameOrigin())
             )
             .cors(cors -> cors.configurationSource(request -> {
                 var corsConfig = new org.springframework.web.cors.CorsConfiguration();
-                corsConfig.setAllowedOrigins(java.util.List.of("http://localhost:3000"));
+                corsConfig.setAllowedOrigins(java.util.List.of("*"));
                 corsConfig.setAllowedMethods(java.util.List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
                 corsConfig.setAllowedHeaders(java.util.List.of("*"));
                 corsConfig.setExposedHeaders(java.util.List.of("Authorization"));
-                corsConfig.setAllowedHeaders(java.util.List.of("Authorization", "Content-Type"));
-                corsConfig.setAllowCredentials(true);
+                corsConfig.setAllowCredentials(false);
                 corsConfig.setMaxAge(3600L);
                 return corsConfig;
             }))
