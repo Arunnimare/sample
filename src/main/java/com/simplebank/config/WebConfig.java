@@ -10,7 +10,13 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/static/**", "/*.html", "/*.css", "/*.js", "/images/**", "/fonts/**")
+        // Handle static resources from React build
+        registry.addResourceHandler("/static/**")
+                .addResourceLocations("classpath:/static/static/")
+                .setCachePeriod(3600);
+        
+        // Handle root level files (index.html, manifest.json, etc)
+        registry.addResourceHandler("/**")
                 .addResourceLocations("classpath:/static/")
                 .setCachePeriod(0);
     }
