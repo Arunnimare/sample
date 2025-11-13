@@ -9,11 +9,19 @@ RUN npm run build
 # Stage 2: Build backend
 FROM eclipse-temurin:17-jdk-alpine AS backend-build
 WORKDIR /app
-COPY . .
+
+# Copy frontend build first
+COPY --from=frontend-build /frontend/build /app/frontend-build
+
+# Copy backend source
+COPY pom.xml mvnw ./
+COPY .mvn .mvn
+COPY src src
 RUN chmod +x mvnw
 
-# Copy frontend build to Spring Boot static resources
-COPY --from=frontend-build /frontend/build /app/src/main/resources/static
+# Copy frontend build to static resources before Maven build
+RUN mkdir -p /app/src/main/resources/static && \
+    cp -r /app/frontend-build/* /app/src/main/resources/static/
 
 RUN ./mvnw clean package -DskipTests
 
