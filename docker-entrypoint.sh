@@ -8,8 +8,13 @@ echo "Port: ${PORT:-10000}"
 # Check if database environment variables are set
 if [ -n "$SPRING_DATASOURCE_URL" ]; then
     echo "Database URL configured: ${SPRING_DATASOURCE_URL}"
+    echo "Using PostgreSQL database"
+    export DATASOURCE_DRIVER="org.postgresql.Driver"
+    export HIBERNATE_DIALECT="org.hibernate.dialect.PostgreSQLDialect"
 else
-    echo "WARNING: SPRING_DATASOURCE_URL not set"
+    echo "WARNING: SPRING_DATASOURCE_URL not set, using H2 in-memory database"
+    export DATASOURCE_DRIVER="org.h2.Driver"
+    export HIBERNATE_DIALECT="org.hibernate.dialect.H2Dialect"
 fi
 
 # Check if JAR exists
